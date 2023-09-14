@@ -16,7 +16,7 @@ import { ExpandMore } from "@mui/icons-material";
 
 type Props = {
   forecast: DailyForecast;
-  currentLocation: Location;
+  currentLocation?: Location;
 };
 
 const PaperContainer = styled(Paper)(({ theme }) => ({

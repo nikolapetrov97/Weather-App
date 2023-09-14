@@ -15,3 +15,9 @@ export const get5DayForecastApi = (locationKey: string, metric: boolean) =>
   fetch(
     `http://dataservice.accuweather.com/forecasts/v1/daily/5day/${locationKey}?apikey=${process.env.REACT_APP_ACCUWEATHER}&metric=${metric}&details=true`
   );
+
+//GET
+export const getLocationByGeolocationApi = (latLonCommaSeparatedString: string) =>
+  fetch(
+    `http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${process.env.REACT_APP_ACCUWEATHER}&q=${latLonCommaSeparatedString}`
+  );

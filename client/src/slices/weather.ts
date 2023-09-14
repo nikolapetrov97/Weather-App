@@ -3,6 +3,7 @@ import {
   get1DayForecastApi,
   get5DayForecastApi,
   getLocationApi,
+  getLocationByGeolocationApi,
 } from "../utils/api";
 import {
   Location,
@@ -13,19 +14,12 @@ import Toasts from "../utils/globalHandlers/Toasts";
 import { endSpinnerAction, startSpinnerAction } from "./globalEvents";
 
 export interface WeatherState {
-  currentLocation: Location;
+  currentLocation?: Location;
   searchLocations?: LocationResponse[];
   currentForecast?: ForecastResponse;
 }
 
-const initialState: WeatherState = {
-  currentLocation: {
-    key: "328328",
-    country: "GB",
-    region: "London",
-    city: "London",
-  }, // LONDON
-};
+const initialState: WeatherState = {};
 
 export const weatherSlice = createSlice({
   name: "weather",
@@ -34,7 +28,7 @@ export const weatherSlice = createSlice({
     setSearchLocations(state, action) {
       state.searchLocations = action.payload;
     },
-    setCurrentLocation(state, { payload }: { payload: Location }) {
+    setCurrentLocation(state, { payload }: { payload: Location | undefined }) {
       state.currentLocation = payload;
     },
     setForecast(state, action) {
@@ -84,6 +78,28 @@ export const get5DayForecast = (
       .then(async (res) => {
         const forecast: ForecastResponse[] = await res.json();
         dispatch(setForecast(forecast));
+      })
+      .catch((e) => Toasts.error(e))
+      .finally(() => dispatch(endSpinnerAction()));
+  };
+};
+
+export const getLocationByGeolocation = (
+  latLonCommaSeparatedString: string
+): any => {
+  return async (dispatch: any) => {
+    dispatch(startSpinnerAction());
+    getLocationByGeolocationApi(latLonCommaSeparatedString)
+      .then(async (res) => {
+        const location = await res.json();
+        dispatch(
+          setCurrentLocation({
+            city: location?.LocalizedName,
+            country: location?.Country?.ID,
+            key: location?.Key,
+            region: location?.AdministrativeArea?.LocalizedName,
+          })
+        );
       })
       .catch((e) => Toasts.error(e))
       .finally(() => dispatch(endSpinnerAction()));

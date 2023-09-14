@@ -1,12 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { get1DayForecast, get5DayForecast } from "../slices/weather";
+import {
+  get1DayForecast,
+  get5DayForecast,
+  getLocationByGeolocation,
+} from "../slices/weather";
 import { ApplicationState } from "../store/store";
 import ForecastCard from "../components/ForecastCard/ForecastCard";
 import { Box, Button, Grid, Paper, Tab, Tabs, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { removeFromFavorites, addToFavorites } from "../slices/user";
 import Toasts from "../utils/globalHandlers/Toasts";
+import { config } from "../utils/config";
 
 export function a11yProps(index: number) {
   return {
@@ -82,6 +87,8 @@ const LandingPage = () => {
       } else if (tabIndex === 1) {
         dispatch(get5DayForecast(currentLocation.key, measuringUnit));
       }
+    } else if (!currentLocation && measuringUnit) {
+      dispatch(getLocationByGeolocation(config.DEFAULT_LOCATION_LAT_LON));
     }
   }, [currentLocation, measuringUnit, tabIndex, dispatch]);
 
