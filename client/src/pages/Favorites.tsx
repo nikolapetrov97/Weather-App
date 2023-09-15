@@ -15,7 +15,7 @@ const Favorites = () => {
             My Favorite Locations
           </Typography>
           {favorites?.map((fav) => (
-            <Box sx={{ my: 2, width: "100%" }} key={fav?.location?.key}>
+            <Box sx={{ my: 2, width: "100%" }} key={fav?.key}>
               <FavoriteCard favorite={fav} />
             </Box>
           ))}

@@ -6,7 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import { ApplicationState } from "../../store/store";
-import { changeMeasuringUnit, changeTheme } from "../../slices/globalEvents";
+import { changeTheme } from "../../slices/globalEvents";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { Button, Container, Menu, MenuItem } from "@mui/material";
@@ -14,6 +14,8 @@ import { useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Outlet, useNavigate } from "react-router-dom";
 import SearchBar from "./components/SearchBar/SearchBar";
+import { MEASUREMNT_TYPES } from "../../utils/enums";
+import { switchUserMeasurement } from "../../slices/user";
 
 const StyledLogo = styled("img")(({ theme }) => ({
   paddingTop: theme.spacing(1.5),
@@ -39,9 +41,7 @@ const Layout = () => {
   const themeMode = useSelector(
     (state: ApplicationState) => state?.globalEvents?.themeMode
   );
-  const measuringUnit = useSelector(
-    (state: ApplicationState) => state?.globalEvents?.measuringUnit
-  );
+  const userState = useSelector((state: ApplicationState) => state?.user);
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -57,7 +57,8 @@ const Layout = () => {
 
   const handleChangeThemeMode = () => dispatch(changeTheme());
 
-  const handleChangeMeasuringUnit = () => dispatch(changeMeasuringUnit());
+  const handleChangeMeasuringUnit = () =>
+    dispatch(switchUserMeasurement(userState?.id));
 
   return (
     <>
@@ -130,7 +131,9 @@ const Layout = () => {
               onClick={handleChangeMeasuringUnit}
               color="inherit"
             >
-              {measuringUnit === "celsium" ? "C" : "F"}
+              {userState?.settings?.measurement === MEASUREMNT_TYPES.CELSIUM
+                ? "C"
+                : "F"}
             </IconButton>
             <IconButton
               sx={{ ml: 1 }}

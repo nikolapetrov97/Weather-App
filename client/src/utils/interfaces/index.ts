@@ -5,11 +5,6 @@ export interface Location {
   city?: string;
 }
 
-export interface FavoritePlace {
-  location?: Location;
-  weather: DailyForecast;
-}
-
 export interface LocationResponse {
   Version: number;
   Key: string;

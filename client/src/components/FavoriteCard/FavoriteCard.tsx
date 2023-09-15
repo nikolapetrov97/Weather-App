@@ -1,16 +1,17 @@
-import { Box, Button, Grid, Paper, Typography } from "@mui/material";
-import { FavoritePlace } from "../../utils/interfaces";
+import { Button, Grid, Paper, Typography } from "@mui/material";
+import { Location } from "../../utils/interfaces";
 import { styled } from "@mui/material/styles";
 import WeatherLoader from "../../utils/lotties/weather-loader.json";
 import Lottie from "lottie-react";
 import { useCallback } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { removeFromFavorites } from "../../slices/user";
 import { useNavigate } from "react-router-dom";
 import { setCurrentLocation } from "../../slices/weather";
+import { ApplicationState } from "../../store/store";
 
 type Props = {
-  favorite: FavoritePlace;
+  favorite: Location;
 };
 
 const PaperContainer = styled(Paper)(({ theme }) => ({
@@ -29,27 +30,25 @@ const PaperContainer = styled(Paper)(({ theme }) => ({
 const FavoriteCard = ({ favorite }: Props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const userState = useSelector((state: ApplicationState) => state?.user);
 
   const handleRemoveFromFavorites = useCallback(
-    () => dispatch(removeFromFavorites({ key: favorite?.location?.key })),
-    [dispatch, favorite?.location?.key]
+    () => dispatch(removeFromFavorites(userState?.id, favorite?.key)),
+    [dispatch, favorite?.key, userState?.id]
   );
 
   const handleMoreDetails = useCallback(() => {
-    dispatch(setCurrentLocation(favorite?.location));
+    dispatch(setCurrentLocation(favorite));
     navigate("/");
-  }, [dispatch, favorite?.location, navigate]);
+  }, [dispatch, favorite, navigate]);
 
   return (
     <PaperContainer>
       <Grid container justifyContent="center">
         <Grid item xs={12} md={7} lg={8} p={2}>
           <Typography variant="h5" fontWeight="bold">
-            Current Weather - {favorite?.location?.city}{" "}
-            {favorite?.location?.region} {favorite?.location?.country}
-          </Typography>
-          <Typography variant="h6">
-            {favorite?.weather?.Day?.IconPhrase}
+            Current Weather - {favorite?.city} {favorite?.region}{" "}
+            {favorite?.country}
           </Typography>
           <Grid container justifyContent="flex-start">
             <Lottie
@@ -57,20 +56,6 @@ const FavoriteCard = ({ favorite }: Props) => {
               animationData={WeatherLoader}
               loop={true}
             />
-            <Box>
-              <Typography
-                sx={{ fontSize: { xs: "1rem", md: "2.5rem", lg: "4rem" } }}
-                fontWeight="bold"
-              >
-                {favorite?.weather?.Temperature?.Maximum?.Value}{" "}
-                {favorite?.weather?.Temperature?.Maximum?.Unit}
-              </Typography>
-              <Typography variant="h6">
-                RealFeel:{" "}
-                {favorite?.weather?.RealFeelTemperature?.Maximum?.Value}{" "}
-                {favorite?.weather?.RealFeelTemperature?.Minimum?.Unit}
-              </Typography>
-            </Box>
           </Grid>
         </Grid>
         <Grid item xs={12} md={5} lg={4} p={2}>

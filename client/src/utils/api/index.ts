@@ -1,3 +1,5 @@
+import { config } from "../config";
+
 //GET
 export const getLocationApi = (searchString: string) =>
   fetch(
@@ -17,7 +19,48 @@ export const get5DayForecastApi = (locationKey: string, metric: boolean) =>
   );
 
 //GET
-export const getLocationByGeolocationApi = (latLonCommaSeparatedString: string) =>
+export const getLocationByGeolocationApi = (
+  latLonCommaSeparatedString: string
+) =>
   fetch(
     `http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${process.env.REACT_APP_ACCUWEATHER}&q=${latLonCommaSeparatedString}`
+  );
+
+//GET
+export const getUserApi = (id: string | number | undefined) =>
+  fetch(`${config.SERVER_BASE_URL}/users/${id}`, { method: "GET" });
+
+export const updateUserApi = (id: string | number | undefined, payload: any) =>
+  fetch(`${config.SERVER_BASE_URL}/users/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(payload),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+export const addToFavoritesApi = (
+  id: string | number | undefined,
+  payload: any
+) =>
+  fetch(`${config.SERVER_BASE_URL}/users/${id}/favorites`, {
+    method: "PATCH",
+    body: JSON.stringify(payload),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+export const removeFromFavoritesApi = (
+  id: string | number | undefined,
+  locationToRemoveId: string | number | undefined
+) =>
+  fetch(
+    `${config.SERVER_BASE_URL}/users/${id}/favorites/${locationToRemoveId}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
   );

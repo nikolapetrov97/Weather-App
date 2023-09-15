@@ -38,14 +38,9 @@ const CustomPaper = styled(Paper)(({ theme }) => ({
 
 const LandingPage = () => {
   const dispatch = useDispatch();
-  const favorites = useSelector(
-    (state: ApplicationState) => state?.user?.favorites
-  );
+  const userState = useSelector((state: ApplicationState) => state?.user);
   const currentLocation = useSelector(
     (state: ApplicationState) => state?.weather?.currentLocation
-  );
-  const measuringUnit = useSelector(
-    (state: ApplicationState) => state?.globalEvents?.measuringUnit
   );
   const currentForecast = useSelector(
     (state: ApplicationState) => state?.weather?.currentForecast
@@ -53,8 +48,9 @@ const LandingPage = () => {
   const [tabIndex, setTabIndex] = useState<number>(0);
 
   const isLocationAFavorite = useMemo(
-    () => favorites?.find((fav) => fav?.location?.key === currentLocation?.key),
-    [currentLocation, favorites]
+    () =>
+      userState?.favorites?.find((fav) => fav?.key === currentLocation?.key),
+    [currentLocation, userState]
   );
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -63,34 +59,34 @@ const LandingPage = () => {
 
   const handleAddRemoveFavorite = () => {
     if (isLocationAFavorite) {
-      dispatch(removeFromFavorites({ key: currentLocation?.key }));
+      dispatch(removeFromFavorites(userState?.id, currentLocation?.key));
       Toasts.success("Removed from favorites");
     } else {
-      if (currentForecast && currentForecast?.DailyForecasts?.length > 0) {
-        dispatch(
-          addToFavorites({
-            place: {
-              location: currentLocation,
-              weather: currentForecast?.DailyForecasts[0],
-            },
-          })
-        );
-        Toasts.success("Successfully added to favorites");
+      if (
+        currentForecast &&
+        currentForecast?.DailyForecasts?.length > 0 &&
+        currentLocation
+      ) {
+        dispatch(addToFavorites(userState?.id, currentLocation));
       }
     }
   };
 
   useEffect(() => {
-    if (currentLocation?.key && measuringUnit) {
+    if (currentLocation?.key && userState?.settings?.measurement) {
       if (tabIndex === 0) {
-        dispatch(get1DayForecast(currentLocation.key, measuringUnit));
+        dispatch(
+          get1DayForecast(currentLocation.key, userState?.settings?.measurement)
+        );
       } else if (tabIndex === 1) {
-        dispatch(get5DayForecast(currentLocation.key, measuringUnit));
+        dispatch(
+          get5DayForecast(currentLocation.key, userState?.settings?.measurement)
+        );
       }
-    } else if (!currentLocation && measuringUnit) {
+    } else if (!currentLocation && userState?.settings?.measurement) {
       dispatch(getLocationByGeolocation(config.DEFAULT_LOCATION_LAT_LON));
     }
-  }, [currentLocation, measuringUnit, tabIndex, dispatch]);
+  }, [currentLocation, userState?.settings?.measurement, tabIndex, dispatch]);
 
   return (
     <Grid container alignItems="center" direction="column">

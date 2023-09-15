@@ -4,14 +4,21 @@ import Layout from "./components/Layout/Layout";
 import { ThemeProvider } from "@mui/material/styles";
 import { darkTheme, lightTheme } from "./utils/themes";
 import { ApplicationState } from "./store/store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import LandingPage from "./pages/LandingPage";
 import Favorites from "./pages/Favorites";
+import { useEffect } from "react";
+import { getUser } from "./slices/user";
 
 function App() {
+  const dispatch = useDispatch();
   const themeMode = useSelector(
     (state: ApplicationState) => state?.globalEvents?.themeMode
   );
+
+  useEffect(() => {
+    dispatch(getUser("65039ca03a60d0cafa398bb9"));
+  }, [dispatch]);
 
   return (
     <ThemeProvider theme={themeMode === "dark" ? darkTheme : lightTheme}>
