@@ -45,10 +45,12 @@ export default userSlice.reducer;
 
 export const getUser = (id: string | number): any => {
   return async (dispatch: any) => {
-    getUserApi(id).then(async (res) => {
-      const { user }: { user: UserState } = await res.json();
-      dispatch(setUser(user));
-    });
+    getUserApi(id)
+      .then(async (res) => {
+        const { user }: { user: UserState } = await res.json();
+        dispatch(setUser(user));
+      })
+      .catch((e) => Toasts.error(e.message));
   };
 };
 
@@ -58,11 +60,13 @@ export const addToFavorites = (
 ): any => {
   return async (dispatch: any) => {
     if (!id || !location) return;
-    addToFavoritesApi(id, location).then(async (res) => {
-      const { user }: { user: UserState } = await res.json();
-      dispatch(setUser(user));
-      Toasts.success("Successfully added to favorites");
-    });
+    addToFavoritesApi(id, location)
+      .then(async (res) => {
+        const { user }: { user: UserState } = await res.json();
+        dispatch(setUser(user));
+        Toasts.success("Successfully added to favorites");
+      })
+      .catch((e) => Toasts.error(e.message));
   };
 };
 
@@ -72,10 +76,12 @@ export const removeFromFavorites = (
 ): any => {
   return async (dispatch: any) => {
     if (!id || !key) return;
-    removeFromFavoritesApi(id, key).then(async (res) => {
-      const { user }: { user: UserState } = await res.json();
-      dispatch(setUser(user));
-    });
+    removeFromFavoritesApi(id, key)
+      .then(async (res) => {
+        const { user }: { user: UserState } = await res.json();
+        dispatch(setUser(user));
+      })
+      .catch((e) => Toasts.error(e.message));
   };
 };
 
@@ -90,9 +96,11 @@ export const switchUserMeasurement = (id: string | number | undefined): any => {
         : MEASUREMNT_TYPES.FAHRENHEIT;
     updateUserApi(id, {
       settings: { measurement: newMeasurement },
-    }).then(async (res) => {
-      const { user }: { user: UserState } = await res.json();
-      dispatch(setUser(user));
-    });
+    })
+      .then(async (res) => {
+        const { user }: { user: UserState } = await res.json();
+        dispatch(setUser(user));
+      })
+      .catch((e) => Toasts.error(e.message));
   };
 };

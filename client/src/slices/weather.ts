@@ -43,10 +43,12 @@ export default weatherSlice.reducer;
 
 export const getLocations = (searchString: string): any => {
   return async (dispatch: any) => {
-    getLocationApi(searchString).then(async (res) => {
-      const locations: LocationResponse[] = await res.json();
-      dispatch(setSearchLocations(locations));
-    });
+    getLocationApi(searchString)
+      .then(async (res) => {
+        const locations: LocationResponse[] = await res.json();
+        dispatch(setSearchLocations(locations));
+      })
+      .catch((e) => Toasts.error(e?.message));
   };
 };
 
@@ -62,7 +64,7 @@ export const get1DayForecast = (
         const forecast: ForecastResponse = await res.json();
         dispatch(setForecast(forecast));
       })
-      .catch((e) => Toasts.error(e))
+      .catch((e) => Toasts.error(e?.message))
       .finally(() => dispatch(endSpinnerAction()));
   };
 };
@@ -79,7 +81,7 @@ export const get5DayForecast = (
         const forecast: ForecastResponse[] = await res.json();
         dispatch(setForecast(forecast));
       })
-      .catch((e) => Toasts.error(e))
+      .catch((e) => Toasts.error(e?.message))
       .finally(() => dispatch(endSpinnerAction()));
   };
 };
@@ -101,7 +103,7 @@ export const getLocationByGeolocation = (
           })
         );
       })
-      .catch((e) => Toasts.error(e))
+      .catch((e) => Toasts.error(e?.message))
       .finally(() => dispatch(endSpinnerAction()));
   };
 };

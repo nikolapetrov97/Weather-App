@@ -97,23 +97,39 @@ const LandingPage = () => {
           alignItems="center"
           px={5}
         >
-          <Typography
-            textAlign="center"
-            sx={{
-              fontSize: { xs: "1.5rem", md: "3rem" },
-              mb: { xs: 1, sm: 0 },
-            }}
-          >
-            {currentLocation?.city}, {currentLocation?.region},{" "}
-            {currentLocation?.country}
-          </Typography>
-          <Button
-            onClick={handleAddRemoveFavorite}
-            color="inherit"
-            variant="contained"
-          >
-            {isLocationAFavorite ? "Remove to favorites" : "Add to favorites"}
-          </Button>
+          {currentLocation ? (
+            <>
+              <Typography
+                textAlign="center"
+                sx={{
+                  fontSize: { xs: "1.5rem", md: "3rem" },
+                  mb: { xs: 1, sm: 0 },
+                }}
+              >
+                {currentLocation?.city}, {currentLocation?.region},{" "}
+                {currentLocation?.country}
+              </Typography>
+              <Button
+                onClick={handleAddRemoveFavorite}
+                color="inherit"
+                variant="contained"
+              >
+                {isLocationAFavorite
+                  ? "Remove to favorites"
+                  : "Add to favorites"}
+              </Button>
+            </>
+          ) : (
+            <Typography
+              textAlign="center"
+              sx={{
+                fontSize: { xs: "1.5rem", md: "3rem" },
+                mb: { xs: 1, sm: 0 },
+              }}
+            >
+              No connection or location
+            </Typography>
+          )}
         </Grid>
       </CustomPaper>
       <CustomTabs

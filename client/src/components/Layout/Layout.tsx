@@ -128,6 +128,7 @@ const Layout = () => {
             </Box>
             <IconButton
               sx={{ ml: 1 }}
+              data-testid="measurement-button"
               onClick={handleChangeMeasuringUnit}
               color="inherit"
             >
@@ -137,6 +138,7 @@ const Layout = () => {
             </IconButton>
             <IconButton
               sx={{ ml: 1 }}
+              data-testid="theme-button"
               onClick={handleChangeThemeMode}
               color="inherit"
             >

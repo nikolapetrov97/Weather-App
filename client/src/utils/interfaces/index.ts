@@ -112,14 +112,14 @@ export interface DailyForecast {
   Day: {
     Icon: number;
     IconPhrase: string;
-    LocalSource: {
+    LocalSource?: {
       Id: number;
       Name: string;
       WeatherCode: string;
     };
     HasPrecipitation: boolean;
-    PrecipitationType: string;
-    PrecipitationIntensity: string;
+    PrecipitationType?: string;
+    PrecipitationIntensity?: string;
     ShortPhrase: string;
     LongPhrase: string;
     PrecipitationProbability: number;
@@ -183,14 +183,14 @@ export interface DailyForecast {
   Night: {
     Icon: number;
     IconPhrase: string;
-    LocalSource: {
+    LocalSource?: {
       Id: number;
       Name: string;
       WeatherCode: string;
     };
     HasPrecipitation: boolean;
-    PrecipitationType: string;
-    PrecipitationIntensity: string;
+    PrecipitationType?: string;
+    PrecipitationIntensity?: string;
     ShortPhrase: string;
     LongPhrase: string;
     PrecipitationProbability: number;
@@ -223,7 +223,7 @@ export interface DailyForecast {
       UnitType: number;
     };
   };
-  Sources: string;
+  Sources: string[];
   MobileLink: string;
   Link: string;
 }
